@@ -5,20 +5,82 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="../dist/styles.css">
+    <link rel="stylesheet" href="../dist/tailwind.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap" rel="stylesheet">
     <title>Tailwind project</title>
 </head>
 
-<body>
-    <header></header>
+<body class="h-full">
+    <header class="w-screen h-20">
+
+    </header>
     <main class="h-screen min-w-full">
-        <section class="converter min-w-full h-3/4 bg-slate-600 flex flex-row justify-center items-center">
-            <div class="card flex flex-row h-1/2 w-3/5 bg-white rounded-lg"></div>
+        <section class="converter bg-transparent min-w-full h-3/4 flex flex-row justify-center items-center">
+            <div class="card border flex flex-col min-h-1/2 h-1/2 w-3/5 bg-white rounded-lg justify-around items-center">
+                <div class="inputs w-4/5 h-3/6 flex flex-row justify-between items-center">
+                    <div class="input-container p-4 pl-0 w-4/12 flex flex-col">
+                        <label for="Amount" class="block">Amount</label>
+                        <input type="text" id="amount" name="amount" class="h-12 block shadow-md border">
+                    </div>
+                    <div class="input-container p-4 w-4/12 flex flex-col">
+                        <label for="From" class="block">From</label>
+                        <select id='from' name="from" class="current h-12 block shadow-md border">
+                        </select>
+                    </div>
+                    <button class="swap h-12 w-12 rounded-full relative top-4 border">
+                        <svg class='change' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-11 -11 40 40"
+                            aria-hidden="true" class="miscellany___StyledIconSwap-sc-1r08bla-1 fZJuOo">
+                            <path fill="currentColor" fill-rule="evenodd"
+                                d="M11.726 1.273l2.387 2.394H.667V5h13.446l-2.386 2.393.94.94 4-4-4-4-.94.94zM.666 12.333l4 4 .94-.94L3.22 13h13.447v-1.333H3.22l2.386-2.394-.94-.94-4 4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <div class="input-container p-4 pr-0 w-4/12 flex flex-col">
+                        <label for="To" class="block">To</label>
+                        <select id='to' name="to" class=" current h-12 block shadow-md border">
+                        </select>
+                    </div>
+                </div>
+                <div class="results w-4/5 h-2/6 flex items-start">
+                </div>
+                <div class="convert w-4/5 h-1/6 flex justify-end">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold h-10 px-4 rounded">Convert</button>
+                </div>
+            </div>
         </section>
-        <section class="history min-w-full h-3/4 bg-red-600"></section>
-        <section class="compare-table"></section>
+        <section class="history bg-transparent min-w-full h-3/4">
+            <div class="table-container flex flex-row">
+                div.row
+            </div>
+        </section>
+        <section class="h-1/4 bg-transparent compare-table">
+            <table class="table-auto">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Change</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>100</td>
+                        <td>0.5</td>
+                        <td>Buy</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </main>
-    <footer></footer>
+    <footer class="h-1/6">
+
+    </footer>
+    <script src="./js/index.js"></script>
 </body>
 
 </html>

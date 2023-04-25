@@ -1,14 +1,9 @@
 {
   "scripts": {
-    "build": "postcss src/css/styles.css -o dist/styles.css",
-    "watch": "watch 'npm run build' src/"
+    "build": "npx tailwindcss --watch -i src/css/tailwind.css -o dist/tailwind.css",
+    "stylus": "npx stylus --watch src/css/styles.styl -o dist/styles.css"
   },
   "devDependencies": {
     "tailwindcss": "^3.3.1"
-  },
-  "dependencies": {
-    "autoprefixer": "^10.4.14",
-    "postcss-cli": "^10.1.0",
-    "watch": "^1.0.2"
   }
 }
