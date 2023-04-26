@@ -11,21 +11,43 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto:ital,wght@1,300&display=swap"
+        rel="stylesheet">
     <title>Tailwind project</title>
 </head>
 
-<body class="h-full">
-    <header class="w-screen h-20">
-
+<body class="overflow-x-hidden">
+    <header class="w-screen h-20 flex">
+        <div class="icon w-1/6 flex justify-center items-center">
+            <img src="img/currency-symbols.png" alt="" class="w-16 h-16">
+        </div>
+        <div class="nav w-4/6 flex justify-center">
+            <nav class="w-1/2 flex justify-evenly text-white items-center">
+                <div class="option w-1/3 h-5/6 rounded-md flex justify-center items-center">
+                    <button class="px-5 py-2 rounded-md">Currencies</button>
+                </div>
+                <div class="option w-1/3 h-5/6 rounded-md flex justify-center items-center">
+                    <button>History</button>
+                </div>
+                <div class="option w-1/3 h-5/6 rounded-md flex justify-center items-center">
+                    <button>Stocks</button>
+                </div>
+            </nav>
+        </div>
+        <div class="sign w-1/6 flex justify-center items-center">
+            <button class="px-10 py-2 rounded-lg">
+                <span class="sign-icon"></span> Sign in
+            </button>
+        </div>
     </header>
-    <main class="h-screen min-w-full">
-        <section class="converter bg-transparent min-w-full h-3/4 flex flex-row justify-center items-center">
-            <div class="card border flex flex-col min-h-1/2 h-1/2 w-3/5 bg-white rounded-lg justify-around items-center">
+    <main class="h-screen w-screen overflow-y-auto overflow-x-hidden">
+        <section class="converter bg-transparent w-screen h-4/6 flex flex-row justify-center items-center">
+            <div
+                class="card border flex flex-col min-h-1/2 h-1/2 w-3/5 bg-white rounded-lg justify-around items-center">
                 <div class="inputs w-4/5 h-3/6 flex flex-row justify-between items-center">
                     <div class="input-container p-4 pl-0 w-4/12 flex flex-col">
                         <label for="Amount" class="block">Amount</label>
-                        <input type="text" id="amount" name="amount" class="h-12 block shadow-md border">
+                        <input type="number" id="amount" name="amount" class="h-12 block shadow-md border">
                     </div>
                     <div class="input-container p-4 w-4/12 flex flex-col">
                         <label for="From" class="block">From</label>
@@ -49,37 +71,53 @@
                 <div class="results w-4/5 h-2/6 flex items-start">
                 </div>
                 <div class="convert w-4/5 h-1/6 flex justify-end">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold h-10 px-4 rounded">Convert</button>
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold h-10 px-4 rounded">Convert</button>
                 </div>
             </div>
         </section>
-        <section class="history bg-transparent min-w-full h-3/4">
-            <div class="table-container flex flex-row">
-                div.row
+        <section class="history bg-transparent w-full h-3/6 flex justify-center">
+            <div class="table-container flex flex-col h-full w-3/4 ">
+                <div class="table-header h-1/6 flex">
+                    <div class="th">
+                        <span>Date</span>
+                    </div>
+                    <div class="th">
+                        <span>Amount</span>
+                    </div>
+                    <div class="th">
+                        <span>From</span>
+                    </div>
+                    <div class="th">
+                        <span>To</span>
+                    </div>
+                    <div class="th">
+                        <span>Result</span>
+                    </div>
+                    <div class="th">
+                        <span>Actions</span>
+                    </div>
+                </div>
+                <div class="table-rows flex-1 flex flex-col">
+
+                </div>
             </div>
         </section>
-        <section class="h-1/4 bg-transparent compare-table">
-            <table class="table-auto">
-                <thead>
-                    <tr>
-                        <th>Amount</th>
-                        <th>Change</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>100</td>
-                        <td>0.5</td>
-                        <td>Buy</td>
-                    </tr>
-                </tbody>
-            </table>
+        <section class="h-3/6 bg-transparent compare-table flex justify-center">
+            <div class="table-container flex flex-col h-full w-1/2">
+                <div class="table-header h-1/6 flex">
+                    <div class="th">
+                        <span>Current</span>
+                    </div>
+                    <div class="th">
+                        <span>Rate</span>
+                    </div>
+                </div>
+                <div class="rates table-rows flex-1 flex flex-col">
+                </div>
+            </div>
         </section>
     </main>
-    <footer class="h-1/6">
-
-    </footer>
     <script src="./js/index.js"></script>
 </body>
 

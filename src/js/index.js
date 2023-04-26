@@ -1,7 +1,20 @@
-API_KEY = "U67bLFOLTH2xYV8CjhnWfMbih9vFj8jq";
+API_KEY = "n16F3slWRwZhHTvzo9W0kT0G9ASneMnq";
 API_BASE = "https://api.apilayer.com/fixer";
 
 const history = JSON.parse(window.localStorage.getItem("transactions")) || [];
+
+function create_UUID() {
+  var dt = new Date().getTime();
+  var uuid = "Axxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      var r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
+  return uuid;
+}
 
 async function addSymbols() {
   let symbols = {};
@@ -31,71 +44,160 @@ async function results() {
   const amount = document.querySelector("#amount");
   const from = document.querySelector("#from");
   const to = document.querySelector("#to");
-  console.log(amount, from, to);
+  if (amount.value.match(/^[0-9]+$/) === null)
+    return alert("Please enter a valid amount");
 
-  if (amount.value === "" || from.value === "" || to.value === "") {
-    document.querySelector(
-      "#notifications"
-    ).innerHTML = `<div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
-    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-        <span class="sr-only">Check icon</span>
-    </div>
-    <div class="ml-3 text-sm font-normal">Item moved successfully.</div>
-    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-        <span class="sr-only">Close</span>
-        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-    </button>
-</div>`;
-  } else {
-    let result = 0;
-    await fetch(
-      `${API_BASE}/convert?to=${to.value}&from=${from.value}&amount=${amount.value}`,
-      {
-        method: "GET",
-        headers: {
-          apikey: API_KEY,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        result = +data.result;
-      })
-      .catch((err) => console.log(err));
+  let result = 0;
+  await fetch(
+    `${API_BASE}/convert?to=${to.value}&from=${from.value}&amount=${amount.value}`,
+    {
+      method: "GET",
+      headers: {
+        apikey: API_KEY,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      result = +data.result;
+    })
+    .catch((err) => console.log(err));
 
-    card.setAttribute("style", "display: block;");
-    card.innerHTML = "";
-    card.appendChild(
-      document.createElement("p")
-    ).innerHTML = `${amount.value} ${from.value} =`;
-    card.appendChild(
-      document.createElement("p")
-    ).innerHTML = `${result} ${to.value}`;
-    card.appendChild(document.createElement("p")).innerHTML = `1 ${
-      from.value
-    } = ${result / amount.value} ${to.value}`;
-    card.appendChild(document.createElement("p")).innerHTML = `1 ${
-      to.value
-    } = ${amount.value / result} ${from.value}`;
-    console.log('done');
-    history.push({
-      from: from.value,
-      to: to.value,
-      amount: amount.value,
-      result,
+  card.setAttribute("style", "display: block;");
+  card.innerHTML = "";
+  card.appendChild(
+    document.createElement("p")
+  ).innerHTML = `${amount.value} ${from.value} =`;
+  card.appendChild(
+    document.createElement("p")
+  ).innerHTML = `${result} ${to.value}`;
+  card.appendChild(document.createElement("p")).innerHTML = `1 ${
+    from.value
+  } = ${result / amount.value} ${to.value}`;
+  card.appendChild(document.createElement("p")).innerHTML = `1 ${to.value} = ${
+    amount.value / result
+  } ${from.value}`;
+  const new_item = {
+    id: create_UUID(),
+    date: new Date().toDateString(),
+    amount: amount.value,
+    from: from.value,
+    to: to.value,
+    result,
+  };
+  history.push(new_item);
+  //Adds row to table
+  window.localStorage.setItem("transactions", JSON.stringify(history));
+  const tablerows = document.querySelector(".table-rows");
+  const row = addRow(
+    new_item,
+    ["row", "flex", "flex-1", "h-1/3", "w-full"],
+    true,
+    true
+  );
+  tablerows.appendChild(row);
+}
+
+function addClasses(el, classes) {
+  classes.map((item) => el.classList.add(item));
+}
+
+function addRow(item, classes, actions = false, id = false) {
+  const row = document.createElement("div");
+  addClasses(row, classes);
+  const keys = id ? Object.keys(item).slice(1) : Object.keys(item);
+  keys.map((key) => {
+    const div = document.createElement("div");
+    div.classList.add("tr");
+    const span = document.createElement("span");
+    span.innerHTML = item[key];
+    div.append(span);
+    row.appendChild(div);
+  });
+  // Creates use buttons
+  if (actions) {
+    const div = document.createElement("div");
+    div.classList.add("tr");
+    const deleteButton = document.createElement("button");
+    addClasses(deleteButton, ["px-4", "py-2", "w-8", "border"]);
+    const deleteSpan = document.createElement("span");
+    deleteSpan.setAttribute("class", "delete");
+    deleteButton.appendChild(deleteSpan);
+    deleteButton.addEventListener("click", () => {
+      console.log("delete");
+      const index = history.findIndex((el) => el.id === item.id);
+      history.splice(index, 1);
+      window.localStorage.setItem("transactions", JSON.stringify(history));
+      document.querySelector(`#${item.id}`).remove();
     });
-    window.localStorage.setItem(
-      "transactions",
-      JSON.stringify(history)
-    );
+    const useButton = document.createElement("button");
+    addClasses(useButton, ["px-4", "py-2", "w-8", "border"]);
+    useButton.addEventListener("click", () => {
+      const index = history.findIndex((el) => el.id === item.id);
+      const { from, to, amount } = history[index];
+      document.querySelector("#from").value = from;
+      document.querySelector("#to").value = to;
+      document.querySelector("#amount").value = amount;
+    });
+
+    const useSpan = document.createElement("span");
+    useSpan.setAttribute("class", "use");
+    useButton.appendChild(useSpan);
+    div.append(deleteButton, useButton);
+    row.appendChild(div);
   }
+  row.setAttribute("id", item.id);
+  return row;
 }
 
-function historyTable() {
-  const tablediv = document.querySelector(".history");
-
+function createRows() {
+  const tablerows = document.querySelector(".table-rows");
+  history.map((item) => {
+    //Creates table rows
+    const row = addRow(
+      item,
+      ["row", "flex", "flex-1", "h-1/3", "w-full"],
+      true,
+      true
+    );
+    tablerows.appendChild(row);
+  });
 }
+
+createRows();
+
+async function createRatesTable() {
+  const ratesTable = document.querySelector(".rates");
+  let rates = {};
+  await fetch(`${API_BASE}/latest`, {
+    method: "GET",
+    headers: {
+      apikey: API_KEY,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      rates = data.rates;
+      console.log(rates);
+    })
+    .catch((err) => console.log(err));
+
+  console.log(rates);
+  Object.entries(rates)
+    .slice(0, 11)
+    .map((item) => {
+      const row = addRow(
+        {
+          current: item[0],
+          rate: item[1],
+        },
+        ["row", "flex", "flex-1", "h-1/3", "w-full"]
+      );
+      ratesTable.appendChild(row);
+    });
+}
+/* 
+createRatesTable(); */
 
 document.querySelector(".swap").addEventListener("click", () => {
   const from = document.querySelector("#from").value;
@@ -105,5 +207,5 @@ document.querySelector(".swap").addEventListener("click", () => {
 });
 
 document.querySelector(".convert").addEventListener("click", results);
-
-addSymbols();
+/* 
+addSymbols(); */
