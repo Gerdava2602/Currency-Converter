@@ -1,4 +1,4 @@
-API_KEY = "n16F3slWRwZhHTvzo9W0kT0G9ASneMnq";
+API_KEY = "JpBJRiXJu03xjqyEqO83NU1co3eXRS17";
 API_BASE = "https://api.apilayer.com/fixer";
 
 const history = JSON.parse(window.localStorage.getItem("transactions")) || [];
@@ -26,11 +26,9 @@ async function addSymbols() {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       symbols = data.symbols;
     })
     .catch((err) => console.log(err));
-  console.log(symbols);
   const options = Object.keys(symbols).map((symbol) => {
     return `<option value="${symbol}">${`${symbol}-${symbols[symbol]}`}</option>`;
   });
@@ -124,7 +122,6 @@ function addRow(item, classes, actions = false, id = false) {
     deleteSpan.setAttribute("class", "delete");
     deleteButton.appendChild(deleteSpan);
     deleteButton.addEventListener("click", () => {
-      console.log("delete");
       const index = history.findIndex((el) => el.id === item.id);
       history.splice(index, 1);
       window.localStorage.setItem("transactions", JSON.stringify(history));
@@ -169,6 +166,7 @@ createRows();
 async function createRatesTable() {
   const ratesTable = document.querySelector(".rates");
   let rates = {};
+  let base = "";
   await fetch(`${API_BASE}/latest`, {
     method: "GET",
     headers: {
@@ -178,26 +176,25 @@ async function createRatesTable() {
     .then((res) => res.json())
     .then((data) => {
       rates = data.rates;
-      console.log(rates);
+      base = data.base;
     })
     .catch((err) => console.log(err));
 
-  console.log(rates);
-  Object.entries(rates)
-    .slice(0, 11)
-    .map((item) => {
-      const row = addRow(
-        {
-          current: item[0],
-          rate: item[1],
-        },
-        ["row", "flex", "flex-1", "h-1/3", "w-full"]
-      );
-      ratesTable.appendChild(row);
-    });
+  const entries = Object.entries(rates);
+  entries.splice(0, 0, [base, 1]);
+  entries.slice(0, 5).map((item) => {
+    const row = addRow(
+      {
+        current: item[0],
+        rate: item[1],
+      },
+      ["row", "flex", "flex-1", "h-1/3", "w-full"]
+    );
+    ratesTable.appendChild(row);
+  });
 }
-/* 
-createRatesTable(); */
+
+createRatesTable();
 
 document.querySelector(".swap").addEventListener("click", () => {
   const from = document.querySelector("#from").value;
@@ -207,5 +204,5 @@ document.querySelector(".swap").addEventListener("click", () => {
 });
 
 document.querySelector(".convert").addEventListener("click", results);
-/* 
-addSymbols(); */
+
+addSymbols();
