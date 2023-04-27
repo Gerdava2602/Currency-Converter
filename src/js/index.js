@@ -42,8 +42,10 @@ async function results() {
   const amount = document.querySelector("#amount");
   const from = document.querySelector("#from");
   const to = document.querySelector("#to");
-  if (amount.value.match(/^[0-9]+$/) === null)
-    return alert("Please enter a valid amount");
+  console.log(from.value);
+  if (amount.value.match(/^[0-9]+$/) === null || from.value === "" )
+    return alert("Please enter a valid amount and currencies");
+  if(to.value === "" || from.value === to.value) return alert("Please enter different currencies");
 
   let result = 0;
   await fetch(
